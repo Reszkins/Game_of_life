@@ -8,7 +8,7 @@ int main(int argc,char **argv){
 
 	arguments args;
 
-	process_input(argc,argv,&args);
+	process_input(argc,&argv[],&args);
 
 	if(args.help == 1){
 

@@ -4,7 +4,7 @@ void display_help(){
 	printf("POMOC\n");
 }
 
-matrix process_input(int argc, char **argv){
+matrix process_input(int argc, char **argv, arguments *args){
 	char c;
 	int x = 1;
 	arguments args;
