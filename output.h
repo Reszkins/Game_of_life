@@ -1,4 +1,10 @@
-// wypisywanie na ekran
-// funkcje do robienia zdjec, gifow
+#ifndef _OUTPUT_H_
+#define _OUTPUT_H_
 
-void write_world();
+#include "matrix.h"
+
+#include <stdio.h>
+
+void write_world(matrix w, FILE *output, char *out);
+
+#endif

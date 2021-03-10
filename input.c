@@ -1,35 +1,46 @@
 #include "matrix.h"
+#include "input.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void display_help(){
 	printf("POMOC\n");
 }
 
-matrix process_input(int argc, char **argv, arguments *args){
+void process_input(int argc, char **argv, arguments *args){
 	char c;
 	int x = 1;
-	arguments args;
+	
 	while(1){
-		if(x => argc) break;
+		if(x >= argc) break;
 
-		if(c=getc(argv[x]) == '-')
-			c = getc(argv[x]);
+		if(c=argv[x][0] == '-')
+			c = argv[x][1];
 		
 		x++;
 
 		switch(c){
 			case 'h':
-				args.help_wanted = 1;
+				args->help_wanted = 1;
 				break;
 			case 'i':
-				args.iterations = atoi(argv[x]);
+				args->iterations = atoi(argv[x]);
 		       		x++;
 				break;	
 			case 'f':
-				args.file = fopen(argv[x], "r");
+				if(strcmp("stdin",argv[x])==0)
+					args->input = stdin;
+				else args->input = fopen(argv[x], "r");
+				args->in = argv[x];
 				x++;
 				break;
 			case 'o':
-				args.output = fopen(argv[x], "w");
+				if(strcmp("stdout",argv[x])==0)
+					args->output = stdout;
+				else args->output = fopen(argv[x], "w");
+				args->out = argv[x];
 				x++;
 				break;
 		}
@@ -41,13 +52,18 @@ matrix process_input(int argc, char **argv, arguments *args){
 
 matrix read_matrix(FILE *in){
 
-	int x = scanf(....);
-	int y = scanf(....);
+	int x;
+	fscanf(in,"%d",&x);
+	int y;
+	fscanf(in,"%d",&y);
 	matrix M;
 	create_matrix(x,y,&M);
 
-	for()
-		for()
+	for(int i=0; i < x; i++){
+		for(int j=0; j < y; j++){
+			fscanf(in,"%d",&M.v[i][j]);
+		}
+	}
 
 	return M;
 }	
