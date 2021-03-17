@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void display_help(){
+void display_help(){				// ta funkcja powinna być w kodzie z obsługą wyjścia, a nie wejścia
 	printf("Usage: ./glife [arguments]\n");
 	printf("Arguments:\n");
 	printf("-h 					=> help\n");
