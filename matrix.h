@@ -5,6 +5,7 @@ typedef struct{
 	int x;
 	int y;
 	int **v;
+	int iteration;
 } matrix;
 
 void create_matrix(int x, int y, matrix *w);

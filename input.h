@@ -10,6 +10,7 @@ typedef struct{
 	FILE *input;
 	char *out;
 	FILE *output;
+	char *format;
 } arguments;
 
 void display_help();

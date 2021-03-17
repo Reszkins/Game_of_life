@@ -33,5 +33,6 @@ void next_generation(matrix *w) {
 			else if(w->v[i][j] == 1 && alive != 2 && alive != 3) w->v[i][j] = 3;
 		}
 	}
+	w->iteration++;
 	fix_matrix(w);
 }
