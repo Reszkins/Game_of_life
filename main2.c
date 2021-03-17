@@ -33,6 +33,7 @@ int main(int argc,char **argv){
 	for(int i=0; i < args.iterations; i++){
 
 		write_world(world,args.output,args.out);
+		save(world, args);
 		next_generation(&world);
 
 	}

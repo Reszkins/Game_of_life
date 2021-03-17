@@ -52,6 +52,10 @@ void process_input(int argc, char **argv, arguments *args){
 				args->out = argv[x];
 				x++;
 				break;
+			case 't':
+				args->format = argv[x];
+				x++;
+				break;
 		}
 
 	}

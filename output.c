@@ -14,19 +14,18 @@
 #include "lib/gifenc.h"
 
 #define CHANNEL_NUM 3
-#define COMP 3
 
-int x=0;
-ge_GIF *gif = NULL;
+int x = 0;
+ge_GIF* gif = NULL;
 
-void error(int y){
-	x=y;
-	if(x==1)
-		fprintf(stderr,"Błąd: Nieprawidłowe argumenty\n");
+void error(int y) {
+	x = y;
+	if (x == 1)
+		fprintf(stderr, "Błąd: Nieprawidłowe argumenty\n");
 
 }
 
-int check_error(){
+int check_error() {
 	return x;
 }
 
@@ -35,12 +34,12 @@ void close_gif()
 	ge_close_gif(gif);
 }
 
-void write_world(matrix w, FILE *output, char *out){
+void write_world(matrix w, FILE* output, char* out) {
 	//printf("POROWNANIE: %d\n",strcmp(out,"stdout"));
-	if(strcmp(out,"stdout")==0){
-		for(int i=0; i < w.x; i++){
-			for(int j=0; j < w.y; j++){
-				fprintf(output,"%d ",w.v[i][j]);
+	if (strcmp(out, "stdout") == 0) {
+		for (int i = 0; i < w.x; i++) {
+			for (int j = 0; j < w.y; j++) {
+				fprintf(output, "%d ", w.v[i][j]);
 			}
 			printf("\n");
 		}
@@ -48,21 +47,24 @@ void write_world(matrix w, FILE *output, char *out){
 	}
 }
 
-char * generate_filename(int it, arguments cfg)
+char* generate_filename(int it, arguments cfg)
 {
-	int length = strlen(cfg.out) + strlen(cfg.format) + 3; 
-	length += floor (log10 (abs (it))) + 1; //liczba cyfr iteracji
+	int length = it ? floor(log10(abs(it))) + 1 : 1; //liczba cyfr iteracji
+	length += strlen(cfg.out) + strlen(cfg.format) + 3;
 	char* filename = malloc(length * sizeof(char));
 	strcpy(filename, cfg.out);
 	strcat(filename, "_");
-	sprintf(filename, "%d", it);
+	int tmp = strlen(filename);
+	snprintf(filename + tmp, length, "%d", it);
 	strcat(filename, ".");
 	strcat(filename, cfg.format);
+
+	return filename;
 }
 
-void set_color_for_gif(uint8_t *pixels, int *index, int p)
+void set_color_for_gif(uint8_t* pixels, int* index, int p)
 {
-	if(p) {
+	if (p) {
 		pixels[(*index)++] = 1;
 	}
 	else {
@@ -70,9 +72,9 @@ void set_color_for_gif(uint8_t *pixels, int *index, int p)
 	}
 }
 
-void set_color_for_image(uint8_t *pixels, int *index, int p)
+void set_color_for_image(uint8_t* pixels, int* index, int p)
 {
-	if(p) {
+	if (p) {
 		pixels[(*index)++] = 255;
 		pixels[(*index)++] = 255;
 		pixels[(*index)++] = 255;
@@ -84,45 +86,45 @@ void set_color_for_image(uint8_t *pixels, int *index, int p)
 	}
 }
 
-void save_png(uint8_t *pixels, int x, int y, char *filename)
+void save_png(uint8_t* pixels, int x, int y, char* filename)
 {
-	stbi_write_png(filename, x, y, COMP, pixels, x * CHANNEL_NUM);
+	stbi_write_png(filename, x, y, 3, pixels, x * CHANNEL_NUM);
 }
 
-void save_jpg(uint8_t *pixels, int x, int y, char *filename)
+void save_jpg(uint8_t* pixels, int x, int y, char* filename)
 {
-	 stbi_write_jpg(filename, x, y, COMP, pixels, 100);
+	stbi_write_jpg(filename, x, y, 3, pixels, 100);
 }
 
-void save_bmp(uint8_t *pixels, int x, int y, char *filename)
+void save_bmp(uint8_t* pixels, int x, int y, char* filename)
 {
-	 stbi_write_bmp(filename, x, y, COMP, pixels);
+	stbi_write_bmp(filename, x, y, 3, pixels);
 }
 
-void save_gif(uint8_t *pixels, int x, int y, char *filename)
+void save_gif(uint8_t* pixels, int x, int y, char* filename)
 {
 
-	if(gif == NULL){
-		gif = ge_new_gif(filename, x, y, 
-			(uint8_t []) {  /* palette */
-				0x00, 0x00, 0x00, /* 0 -> black */
+	if (gif == NULL) {
+		gif = ge_new_gif(filename, x, y,
+			(uint8_t[]) {  /* palette */
+			0x00, 0x00, 0x00, /* 0 -> black */
 				0xFF, 0x00, 0x00, /* 1 -> red */
 				0x00, 0xFF, 0x00, /* 2 -> green */
 				0x00, 0x00, 0xFF, /* 3 -> blue */
-        	}
-			, 2, 0);
+		}
+		, 2, 0);
 	}
 	gif->frame = pixels;
-	
+
 	ge_add_frame(gif, 10);
 }
 
-uint8_t* set_pixels(matrix w, int scale, void (*f)(uint8_t *pixels, int *index, int p))
+uint8_t* set_pixels(matrix w, int scale, int comp, void (*f)(uint8_t *pixels, int *index, int p))
 {
 	int width = w.x * scale;
 	int height = w.y * scale;
 
-	uint8_t *pixels = malloc(width * height);
+	uint8_t *pixels = malloc(width * height * comp);
 
 	int *index = malloc(sizeof *index);
 	*index = 0;
@@ -142,27 +144,29 @@ uint8_t* set_pixels(matrix w, int scale, void (*f)(uint8_t *pixels, int *index, 
 	return pixels;
 }
 
-void save(matrix w, arguments cfg){	
+void save(matrix w, arguments cfg) {
 	int scale = 10;
+	int comp = 3;
 	int width = w.x * scale;
 	int height = w.y * scale;
 	char* filename = generate_filename(w.iteration, cfg);
-	if(!strcmp(cfg.format, "png")) {
-		uint8_t *pixels = set_pixels(w, scale, set_color_for_image);
+	if (!strcmp(cfg.format, "png")) {
+		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_image);
 		save_png(pixels, width, height, filename);
-	} 
-	else if(!strcmp(cfg.format, "jpg")) {
-		uint8_t *pixels = set_pixels(w, scale, set_color_for_image);
+	}
+	else if (!strcmp(cfg.format, "jpg")) {
+		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_image);
 		save_jpg(pixels, width, height, filename);
 	}
-	else if(!strcmp(cfg.format, "bmp")) {
-		uint8_t *pixels = set_pixels(w, scale, set_color_for_image);
+	else if (!strcmp(cfg.format, "bmp")) {
+		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_image);
 		save_bmp(pixels, width, height, filename);
 	}
-	else if(!strcmp(cfg.format, "gif")) {
-		uint8_t *pixels = set_pixels(w, scale, set_color_for_gif);
+	else if (!strcmp(cfg.format, "gif")) {
+		comp = 1;
+		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_gif);
 		save_gif(pixels, width, height, filename);
-		if(w.iteration == cfg.iterations - 1) close_gif();
+		if (w.iteration == cfg.iterations - 1) close_gif();
 	}
 }
 
