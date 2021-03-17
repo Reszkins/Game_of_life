@@ -1,12 +1,18 @@
 #include "matrix.h"
 #include "input.h"
+#include "output.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void display_help(){
-	printf("POMOC\n");
+void display_help(){				// ta funkcja powinna być w kodzie z obsługą wyjścia, a nie wejścia
+	printf("Usage: ./glife [arguments]\n");
+	printf("Arguments:\n");
+	printf("-h 					=> help\n");
+	printf("-f (with filename or stdin) 		=> input file\n");
+	printf("-o (with one of:[gif, stdout, png]) 	=> output file type\n");
+	printf("-i (with integer number) 		=> number of iterations\n");
 }
 
 void process_input(int argc, char **argv, arguments *args){
@@ -18,6 +24,10 @@ void process_input(int argc, char **argv, arguments *args){
 
 		if(c=argv[x][0] == '-')
 			c = argv[x][1];
+		else{
+		       	error(1);
+			break;
+		}
 		
 		x++;
 
@@ -39,7 +49,6 @@ void process_input(int argc, char **argv, arguments *args){
 			case 'o':
 				if(strcmp("stdout",argv[x])==0)
 					args->output = stdout;
-				else args->output = fopen(argv[x], "w");
 				args->out = argv[x];
 				x++;
 				break;

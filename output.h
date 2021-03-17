@@ -14,4 +14,8 @@ void error(int x);
 
 int check_error();
 
+void error(int x);
+
+int check_error();
+
 #endif
