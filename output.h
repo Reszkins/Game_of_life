@@ -7,4 +7,8 @@
 
 void write_world(matrix w, FILE *output, char *out);
 
+void error(int x);
+
+int check_error();
+
 #endif

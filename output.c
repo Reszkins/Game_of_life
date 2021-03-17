@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
+int x=0;
 
 void write_world(matrix w, FILE *output, char *out){
 	//printf("POROWNANIE: %d\n",strcmp(out,"stdout"));
@@ -16,4 +17,15 @@ void write_world(matrix w, FILE *output, char *out){
 		}
 		printf("\n");
 	}
+}
+
+void error(int y){
+	x=y;
+	if(x==1)
+		fprintf(stderr,"Błąd: Nieprawidłowe argumenty\n");
+
+}
+
+int check_error(){
+	return x;
 }
