@@ -10,6 +10,8 @@ int main(int argc,char **argv){
 
 	arguments args;
 
+	init_cfg(&args);
+	
 	process_input(argc,argv,&args);
 
 	int e=check_error();
@@ -28,14 +30,17 @@ int main(int argc,char **argv){
 		return 1;
 	}
 	
-	matrix world = read_matrix(args.input);
+	matrix world = read_matrix(args.in);
 
 	for(int i=0; i < args.iterations; i++){
 
-		write_world(world,args.output,args.out);
-		save(world, args);
+		//write_world(world,args.output,args.out);
+		save(world, &args);
 		next_generation(&world);
 
 	}
+
+	free_matrix(&world);
+
 	return 0;
 }

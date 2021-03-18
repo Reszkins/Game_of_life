@@ -9,5 +9,5 @@ typedef struct{
 } matrix;
 
 void create_matrix(int x, int y, matrix *w);
-
+void free_matrix(matrix *w);
 #endif

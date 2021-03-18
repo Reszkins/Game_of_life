@@ -6,17 +6,21 @@
 typedef struct{
 	int help_wanted;
 	int iterations;
-	char *in;
-	FILE *input;
-	char *out;
+	char in[260];
+	//FILE *input;
+	char out[260];
 	FILE *output;
-	char *format;
+	char format[10];
 } arguments;
+
+void init_cfg(arguments *args);
 
 void display_help();
 
 void process_input(int argc, char **argv, arguments *args);
 
-matrix read_matrix(FILE *in);
+int is_type(arguments cfg, const char* type);
+
+matrix read_matrix(char *in);
 
 #endif

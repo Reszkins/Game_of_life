@@ -7,8 +7,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-void write_world(matrix w, FILE *output, char *out);
-void save(matrix w, arguments cfg);
+void save(matrix w, arguments *cfg);
 
 void error(int x);
 

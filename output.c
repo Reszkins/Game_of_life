@@ -34,31 +34,38 @@ void close_gif()
 	ge_close_gif(gif);
 }
 
-void write_world(matrix w, FILE* output, char* out) {
-	//printf("POROWNANIE: %d\n",strcmp(out,"stdout"));
-	if (strcmp(out, "stdout") == 0) {
+void write_world(matrix w, arguments cfg) {
 		for (int i = 0; i < w.x; i++) {
 			for (int j = 0; j < w.y; j++) {
-				fprintf(output, "%d ", w.v[i][j]);
+				fprintf(cfg.output, "%d ", w.v[i][j]);
 			}
-			printf("\n");
+			fprintf(cfg.output, "\n");
 		}
-		printf("\n");
-	}
+		fprintf(cfg.output, "\n");
 }
 
 char* generate_filename(int it, arguments cfg)
 {
-	int length = it ? floor(log10(abs(it))) + 1 : 1; //liczba cyfr iteracji
-	length += strlen(cfg.out) + strlen(cfg.format) + 3;
-	char* filename = malloc(length * sizeof(char));
-	strcpy(filename, cfg.out);
-	strcat(filename, "_");
-	int tmp = strlen(filename);
-	snprintf(filename + tmp, length, "%d", it);
-	strcat(filename, ".");
-	strcat(filename, cfg.format);
+	char* filename;
 
+	if(is_type(cfg, "gif") || is_type(cfg, "txt")){
+		int length = strlen(cfg.out) + strlen(cfg.format) + 3;
+		filename = malloc(length * sizeof(char));
+		strcpy(filename, cfg.out);
+		strcat(filename, ".");
+		strcat(filename, cfg.format);
+	}
+	else{
+		int length = it ? floor(log10(abs(it))) + 1 : 1; //liczba cyfr iteracji
+		length += strlen(cfg.out) + strlen(cfg.format) + 3;
+		filename = malloc(length * sizeof(char));
+		strcpy(filename, cfg.out);
+		strcat(filename, "_");
+		int tmp = strlen(filename);
+		snprintf(filename + tmp, length, "%d", it);
+		strcat(filename, ".");
+		strcat(filename, cfg.format);
+	}
 	return filename;
 }
 
@@ -107,15 +114,14 @@ void save_gif(uint8_t* pixels, int x, int y, char* filename)
 	if (gif == NULL) {
 		gif = ge_new_gif(filename, x, y,
 			(uint8_t[]) {  /* palette */
-			0x00, 0x00, 0x00, /* 0 -> black */
+				0x00, 0x00, 0x00, /* 0 -> black */
 				0xFF, 0x00, 0x00, /* 1 -> red */
 				0x00, 0xFF, 0x00, /* 2 -> green */
 				0x00, 0x00, 0xFF, /* 3 -> blue */
 		}
 		, 2, 0);
 	}
-	gif->frame = pixels;
-
+	memcpy(gif->frame, pixels, x*y);
 	ge_add_frame(gif, 10);
 }
 
@@ -130,44 +136,66 @@ uint8_t* set_pixels(matrix w, int scale, int comp, void (*f)(uint8_t *pixels, in
 	*index = 0;
 
 	for(int i = 0; i < w.x; i++){
-			for(int l = 0; l<scale; l++){
-				for(int j = 0; j < w.y; j++){
-					for(int k = 0; k<scale; k++){
-						f(pixels, index, w.v[i][j]);
-					}
+		for(int l = 0; l<scale; l++){
+			for(int j = 0; j < w.y; j++){
+				for(int k = 0; k<scale; k++){
+					f(pixels, index, w.v[i][j]);
 				}
 			}
 		}
+	}
 
 	free(index);
 
 	return pixels;
 }
 
-void save(matrix w, arguments cfg) {
+void save(matrix w, arguments *args) {
+	uint8_t* pixels;
+	arguments cfg = *args;	
 	int scale = 10;
 	int comp = 3;
 	int width = w.x * scale;
 	int height = w.y * scale;
+
 	char* filename = generate_filename(w.iteration, cfg);
-	if (!strcmp(cfg.format, "png")) {
-		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_image);
+
+	if (is_type(cfg, "png")) {
+		pixels = set_pixels(w, scale, comp, set_color_for_image);
 		save_png(pixels, width, height, filename);
+		free(pixels);
 	}
-	else if (!strcmp(cfg.format, "jpg")) {
-		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_image);
+	else if (is_type(cfg, "jpg")) {
+		pixels = set_pixels(w, scale, comp, set_color_for_image);
 		save_jpg(pixels, width, height, filename);
+		free(pixels);
 	}
-	else if (!strcmp(cfg.format, "bmp")) {
-		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_image);
+	else if (is_type(cfg, "bmp")) {
+		pixels = set_pixels(w, scale, comp, set_color_for_image);
 		save_bmp(pixels, width, height, filename);
+		free(pixels);
 	}
-	else if (!strcmp(cfg.format, "gif")) {
+	else if (is_type(cfg, "gif")) {
 		comp = 1;
-		uint8_t* pixels = set_pixels(w, scale, comp, set_color_for_gif);
+		pixels = set_pixels(w, scale, comp, set_color_for_gif);
 		save_gif(pixels, width, height, filename);
+		free(pixels);
 		if (w.iteration == cfg.iterations - 1) close_gif();
 	}
+	else if (is_type(cfg, "txt") || is_type(cfg, "stdout")) {
+		if(cfg.output == NULL) {
+			args->output = is_type(cfg, "stdout") ? stdout : fopen(filename, "w"); 
+			cfg = *args;
+		}
+		write_world(w, cfg);
+
+		if (w.iteration == cfg.iterations - 1 && is_type(cfg, "txt")) 
+		{
+			fclose(cfg.output);
+		}
+	}
+	
+	free(filename);
 }
 
 

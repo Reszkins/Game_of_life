@@ -11,7 +11,8 @@ void display_help(){				// ta funkcja powinna być w kodzie z obsługą wyjścia
 	printf("Arguments:\n");
 	printf("-h 					=> help\n");
 	printf("-f (with filename or stdin) 		=> input file\n");
-	printf("-o (with one of:[gif, stdout, png]) 	=> output file type\n");
+	printf("-o (with filename prefix) 	=> output file prefix\n");
+	printf("-t (with one of:[gif, jpg, png, bmp, txt, stdout]) 	=> output file type\n");
 	printf("-i (with integer number) 		=> number of iterations\n");
 }
 
@@ -40,31 +41,30 @@ void process_input(int argc, char **argv, arguments *args){
 		       		x++;
 				break;	
 			case 'f':
-				if(strcmp("stdin",argv[x])==0)
-					args->input = stdin;
-				else args->input = fopen(argv[x], "r");
-				args->in = argv[x];
+				strcpy(args->in, argv[x]);
 				x++;
 				break;
 			case 'o':
-				if(strcmp("stdout",argv[x])==0)
-					args->output = stdout;
-				args->out = argv[x];
+				strcpy(args->out, argv[x]);
 				x++;
 				break;
 			case 't':
-				args->format = argv[x];
+				strcpy(args->format, argv[x]);
 				x++;
 				break;
 		}
 
 	}
-
 }
 
+int is_type(arguments cfg, const char* type)
+{
+	if(!strcmp(cfg.format, type)) return 1;
+	return 0;
+}
 
-matrix read_matrix(FILE *in){
-
+matrix read_matrix(char *filename){
+	FILE *in = strcmp(filename, "stdin") == 0 ? stdin : fopen(filename, "r");
 	int x;
 	fscanf(in,"%d",&x);
 	int y;
@@ -78,7 +78,16 @@ matrix read_matrix(FILE *in){
 		}
 	}
 
+	fclose(in);
 	return M;
 }	
 
-
+void init_cfg(arguments *args){
+	args->help_wanted = 0;
+	args->iterations = 100;
+	strcpy(args->in, "dane");
+	//args->input = NULL;
+	strcpy(args->out, "wynik");
+	args->output = NULL;
+	strcpy(args->format, "gif");
+}
