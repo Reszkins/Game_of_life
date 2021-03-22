@@ -9,4 +9,8 @@ void fix_matrix(matrix *w);
 
 void next_generation(matrix *w);
 
+void find_ant(matrix* w);
+
+void ant_next_generation(matrix* w);
+
 #endif

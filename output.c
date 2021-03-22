@@ -71,7 +71,10 @@ char* generate_filename(int it, arguments cfg)
 
 void set_color_for_gif(uint8_t* pixels, int* index, int p)
 {
-	if (p) {
+	if(p == 2) {
+		pixels[(*index)++] = 2;
+	}
+	else if (p) {
 		pixels[(*index)++] = 1;
 	}
 	else {
@@ -81,7 +84,12 @@ void set_color_for_gif(uint8_t* pixels, int* index, int p)
 
 void set_color_for_image(uint8_t* pixels, int* index, int p)
 {
-	if (p) {
+	if (p == 2) {
+		pixels[(*index)++] = 122;
+		pixels[(*index)++] = 122;
+		pixels[(*index)++] = 122;
+	}
+	else if (p) {
 		pixels[(*index)++] = 255;
 		pixels[(*index)++] = 255;
 		pixels[(*index)++] = 255;

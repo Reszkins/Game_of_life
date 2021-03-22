@@ -9,11 +9,12 @@
 void display_help(){				// ta funkcja powinna być w kodzie z obsługą wyjścia, a nie wejścia
 	printf("Usage: ./glife [arguments]\n");
 	printf("Arguments:\n");
-	printf("-h 					=> help\n");
-	printf("-f (with filename or stdin) 		=> input file\n");
-	printf("-o (with filename prefix) 	=> output file prefix\n");
+	printf("-h 							=> help\n");
+	printf("-g (with one of:[glife, ant]				=> game\n");
+	printf("-f (with filename or stdin) 				=> input file\n");
+	printf("-o (with filename prefix) 				=> output file prefix\n");
 	printf("-t (with one of:[gif, jpg, png, bmp, txt, stdout]) 	=> output file type\n");
-	printf("-i (with integer number) 		=> number of iterations\n");
+	printf("-i (with integer number) 				=> number of iterations\n");
 }
 
 void process_input(int argc, char **argv, arguments *args){
@@ -50,6 +51,10 @@ void process_input(int argc, char **argv, arguments *args){
 				break;
 			case 't':
 				strcpy(args->format, argv[x]);
+				x++;
+				break;
+			case 'g':
+				strcpy(args->game, argv[x]);
 				x++;
 				break;
 		}
@@ -90,4 +95,5 @@ void init_cfg(arguments *args){
 	strcpy(args->out, "wynik");
 	args->output = NULL;
 	strcpy(args->format, "gif");
+	strcpy(args->game, "glife");
 }

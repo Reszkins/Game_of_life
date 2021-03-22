@@ -11,6 +11,7 @@ typedef struct{
 	char out[260];
 	FILE *output;
 	char format[10];
+	char game[50];
 } arguments;
 
 void init_cfg(arguments *args);

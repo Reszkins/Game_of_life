@@ -4,6 +4,7 @@
 #include "simulator.h"
 
 #include <stdio.h>
+#include <string.h>
 
 
 int main(int argc,char **argv){
@@ -16,16 +17,8 @@ int main(int argc,char **argv){
 
 	int e=check_error();
 	if(e != 0) return e;
-	
-	/*
-	printf("help_wanted: %d\n",args.help_wanted);
-	printf("iterations: %d\n",args.iterations);
-	printf("out: %s\n",args.out);
-	printf("in: %s\n",args.in);
-	*/
 
 	if(args.help_wanted == 1){
-
 	     	display_help();
 		return 1;
 	}
@@ -34,9 +27,12 @@ int main(int argc,char **argv){
 
 	for(int i=0; i < args.iterations; i++){
 
-		//write_world(world,args.output,args.out);
 		save(world, &args);
-		next_generation(&world);
+		
+		if(strcmp(args.game,"glife") == 0)
+			next_generation(&world);
+		else if(strcmp(args.game,"ant") == 0)
+			ant_next_generation(&world);
 
 	}
 

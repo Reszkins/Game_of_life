@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+//glife
 int neighbors_alive(matrix w, int x, int y) {
 	int alive = 0;
 	for(int i = x-1; i < x+2 && i < w.x; i++){
@@ -35,4 +36,115 @@ void next_generation(matrix *w) {
 	}
 	w->iteration++;
 	fix_matrix(w);
+}
+
+//ant
+int ant = 0;
+int ant_x = -1;
+int ant_y = -1;
+char direction = 'n';
+
+void find_ant(matrix *w){
+	for(int i=0; i < w->x; i++){
+		for(int j=0; j < w->y; j++){
+			if(w->v[i][j] == 2){
+				ant_x = i;
+				ant_y = j;
+				break;
+			}
+		}
+	}
+}
+
+void ant_next_generation(matrix *w){
+	if(ant_x == -1 && ant_y == -1)
+		find_ant(w);
+	//printf("x: %d y: %d d: %c\n",ant_x,ant_y,direction);
+	if(ant==0){
+		w->v[ant_x][ant_y] = 1;
+		if(direction == 'n'){
+			if(ant_x-1 < 0) ant_x = w->x-1;
+			else ant_x = ant_x - 1;
+			direction = 'w';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}
+		else if(direction == 's'){
+			if(ant_x+1 == w->x) ant_x = 0;
+			else ant_x = ant_x + 1;
+			direction = 'e';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}	
+		else if(direction == 'w'){
+			if(ant_y-1 < 0) ant_y = w->y-1;
+			else ant_y = ant_y - 1;
+			direction = 's';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}
+		else if(direction == 'e'){
+			if(ant_y+1 == w->y) ant_y = 0;
+			else ant_y = ant_y + 1;
+			direction = 'n';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}	
+	}
+	else if(ant==1){
+		w->v[ant_x][ant_y] = 0;
+		if(direction == 'n'){
+			if(ant_x+1 == w->x) ant_x = 0;
+			else ant_x = ant_x + 1;
+			direction = 'w';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}
+		else if(direction == 's'){
+			if(ant_x-1 < 0) ant_x = w->x-1;
+			else ant_x = ant_x - 1;
+			direction = 'e';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}	
+		else if(direction == 'w'){
+			if(ant_y+1 == w->y) ant_y = 0;
+			else ant_y = ant_y + 1;
+			direction = 's';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}
+		else if(direction == 'e'){
+			if(ant_y-1 < 0) ant_y = w->y-1;
+			else ant_y = ant_y - 1;
+			direction = 'n';
+			if(w->v[ant_x][ant_y] == 0)
+				ant = 0;
+			else
+				ant = 1;
+			w->v[ant_x][ant_y] = 2;
+		}
+	}
+	w->iteration++;
 }
