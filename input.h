@@ -12,9 +12,13 @@ typedef struct{
 	FILE *output;
 	char format[10];
 	char game[50];
+	int birth[9];
+	int survival[9];
 } arguments;
 
 void init_cfg(arguments *args);
+
+void set_rules(arguments *args, char* rules);
 
 void process_input(int argc, char **argv, arguments *args);
 

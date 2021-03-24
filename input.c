@@ -6,6 +6,35 @@
 #include <stdlib.h>
 #include <string.h>
 
+void set_rules(arguments *args, char* rules) // ustawia reguły gry
+{
+	int length = strlen(rules);
+	int i=0, s=0, b=0;
+	if(rules[i]=='B') i++;
+	while(rules[i] != '/')
+	{
+		if(rules[i] <= '9' && rules[i] >= '0')
+		{
+			args->birth[b] = rules[i] - '0';
+			b++;
+			i++;
+		}
+	}
+	i++;
+	if(rules[i]=='S') i++;
+	while(rules[i] != '\0')
+	{
+		if(rules[i] <= '9' && rules[i] >= '0')
+		{
+			args->survival[s] = rules[i] - '0';
+			s++;
+			i++;
+		}
+	}
+	for(;b<9;b++) args->birth[b] = -1;
+	for(;s<9;s++) args->survival[s] = -1;
+}
+
 void process_input(int argc, char **argv, arguments *args){	// przetworzenie argumentów wejściowych
 	char c;
 	int x = 1;
@@ -44,6 +73,10 @@ void process_input(int argc, char **argv, arguments *args){	// przetworzenie arg
 				break;
 			case 'g':
 				strcpy(args->game, argv[x]);
+				x++;
+				break;
+			case 'r':
+				set_rules(args, argv[x]);
 				x++;
 				break;
 		}
@@ -85,4 +118,5 @@ void init_cfg(arguments *args){		// ustalenie wartości argumentów na domyślne
 	args->output = NULL;
 	strcpy(args->format, "gif");
 	strcpy(args->game, "glife");
+	set_rules(args, "3/23");
 }

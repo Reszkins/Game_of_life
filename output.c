@@ -27,6 +27,7 @@ void display_help(){				// wyświetlenie pomocy
 	printf("-o (with filename prefix) 				=> output file prefix\n");
 	printf("-t (with one of:[gif, jpg, png, bmp, txt, stdout]) 	=> output file type\n");
 	printf("-i (with integer number) 				=> number of iterations\n");
+	printf("-r (with string eg. 36/23) 				=> rules\n");
 }
 
 void error(int y) {				// zgłoszenie błędu

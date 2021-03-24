@@ -30,7 +30,7 @@ int main(int argc,char **argv){
 		save(world, &args);
 		
 		if(strcmp(args.game,"glife") == 0)	// w zależności od gry różne zasady
-			next_generation(&world);
+			next_generation(&world, args);
 		else if(strcmp(args.game,"ant") == 0)
 			ant_next_generation(&world);
 

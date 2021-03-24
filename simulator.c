@@ -3,6 +3,25 @@
 
 #include <stdio.h>
 
+int check_rules(int alive, int cell, arguments cfg) // określenie następnego stanu komórki
+{	
+	int tmp = 0;
+	if(cell == 0) 
+	{	
+		for(int i = 0; i<9; i++)
+			if(alive == cfg.birth[i])
+				return 2;
+		return 0;
+	}
+	else if(cell == 1) {
+		for(int i = 0; i<9; i++)
+			if(alive == cfg.survival[i])
+				tmp = 1;
+		if(tmp) return 1;
+		else return	3;
+	}
+}
+
 //glife
 int neighbors_alive(matrix w, int x, int y) {		// policzenie żywych sąsiadów
 	int alive = 0;
@@ -26,12 +45,11 @@ void fix_matrix(matrix *w) {				// przerobienie macierzy na macierz z wartościa
 	}		
 }
 
-void next_generation(matrix *w) {			// stworzenie nowej generacji świata
+void next_generation(matrix *w, arguments cfg) {			// stworzenie nowej generacji świata
 	for(int i=0; i < w->x; i++){	
 		for(int j=0; j < w->y; j++){
 			int alive = neighbors_alive(*w,i,j);
-			if(w->v[i][j] == 0 && alive == 3) w->v[i][j] = 2;
-			else if(w->v[i][j] == 1 && alive != 2 && alive != 3) w->v[i][j] = 3;
+			w->v[i][j] = check_rules(alive, w->v[i][j], cfg);
 		}
 	}
 	w->iteration++;
