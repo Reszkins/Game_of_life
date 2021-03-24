@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 //glife
-int neighbors_alive(matrix w, int x, int y) {
+int neighbors_alive(matrix w, int x, int y) {		// policzenie żywych sąsiadów
 	int alive = 0;
 	for(int i = x-1; i < x+2 && i < w.x; i++){
 		for(int j = y-1; j < y+2 && j < w.y; j++){
@@ -17,7 +17,7 @@ int neighbors_alive(matrix w, int x, int y) {
 	return alive;
 }
 
-void fix_matrix(matrix *w) {
+void fix_matrix(matrix *w) {				// przerobienie macierzy na macierz z wartościami tylko 1 lub 0
 	for(int i=0; i < w->x; i++){
 		for(int j=0; j < w->y; j++){
 	      		if(w->v[i][j] == 3) w->v[i][j] = 0;
@@ -26,8 +26,8 @@ void fix_matrix(matrix *w) {
 	}		
 }
 
-void next_generation(matrix *w) {
-	for(int i=0; i < w->x; i++){
+void next_generation(matrix *w) {			// stworzenie nowej generacji świata
+	for(int i=0; i < w->x; i++){	
 		for(int j=0; j < w->y; j++){
 			int alive = neighbors_alive(*w,i,j);
 			if(w->v[i][j] == 0 && alive == 3) w->v[i][j] = 2;
@@ -44,7 +44,7 @@ int ant_x = -1;
 int ant_y = -1;
 char direction = 'n';
 
-void find_ant(matrix *w){
+void find_ant(matrix *w){			// znalezienie początkowej lokalizacji mrówki
 	for(int i=0; i < w->x; i++){
 		for(int j=0; j < w->y; j++){
 			if(w->v[i][j] == 2){
@@ -56,7 +56,7 @@ void find_ant(matrix *w){
 	}
 }
 
-void ant_next_generation(matrix *w){
+void ant_next_generation(matrix *w){		// stworzenie następnej generacji świata
 	if(ant_x == -1 && ant_y == -1)
 		find_ant(w);
 	//printf("x: %d y: %d d: %c\n",ant_x,ant_y,direction);

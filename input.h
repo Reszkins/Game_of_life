@@ -16,8 +16,6 @@ typedef struct{
 
 void init_cfg(arguments *args);
 
-void display_help();
-
 void process_input(int argc, char **argv, arguments *args);
 
 int is_type(arguments cfg, const char* type);

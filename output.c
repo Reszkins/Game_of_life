@@ -18,14 +18,25 @@
 int x = 0;
 ge_GIF* gif = NULL;
 
-void error(int y) {
+void display_help(){				// wyświetlenie pomocy
+	printf("Usage: ./glife [arguments]\n");
+	printf("Arguments:\n");
+	printf("-h 							=> help\n");
+	printf("-g (with one of:[glife, ant]				=> game\n");
+	printf("-f (with filename or stdin) 				=> input file\n");
+	printf("-o (with filename prefix) 				=> output file prefix\n");
+	printf("-t (with one of:[gif, jpg, png, bmp, txt, stdout]) 	=> output file type\n");
+	printf("-i (with integer number) 				=> number of iterations\n");
+}
+
+void error(int y) {				// zgłoszenie błędu
 	x = y;
 	if (x == 1)
 		fprintf(stderr, "Błąd: Nieprawidłowe argumenty\n");
 
 }
 
-int check_error() {
+int check_error() {				// zwrócenie błędu
 	return x;
 }
 
@@ -34,7 +45,7 @@ void close_gif()
 	ge_close_gif(gif);
 }
 
-void write_world(matrix w, arguments cfg) {
+void write_world(matrix w, arguments cfg) {	// wypisanie świata, jeśli plik wyjściowy to stdout lub txt 
 		for (int i = 0; i < w.x; i++) {
 			for (int j = 0; j < w.y; j++) {
 				fprintf(cfg.output, "%d ", w.v[i][j]);
@@ -44,7 +55,7 @@ void write_world(matrix w, arguments cfg) {
 		fprintf(cfg.output, "\n");
 }
 
-char* generate_filename(int it, arguments cfg)
+char* generate_filename(int it, arguments cfg)	// stworzenie nazwy pliku wyjściowego
 {
 	char* filename;
 
@@ -69,7 +80,7 @@ char* generate_filename(int it, arguments cfg)
 	return filename;
 }
 
-void set_color_for_gif(uint8_t* pixels, int* index, int p)
+void set_color_for_gif(uint8_t* pixels, int* index, int p)	// ustalenie kolorów w gifie
 {
 	if(p == 2) {
 		pixels[(*index)++] = 2;
@@ -82,7 +93,7 @@ void set_color_for_gif(uint8_t* pixels, int* index, int p)
 	}
 }
 
-void set_color_for_image(uint8_t* pixels, int* index, int p)
+void set_color_for_image(uint8_t* pixels, int* index, int p)	// ustalenie kolorów w obrazie
 {
 	if (p == 2) {
 		pixels[(*index)++] = 122;
@@ -133,7 +144,7 @@ void save_gif(uint8_t* pixels, int x, int y, char* filename)
 	ge_add_frame(gif, 10);
 }
 
-uint8_t* set_pixels(matrix w, int scale, int comp, void (*f)(uint8_t *pixels, int *index, int p))
+uint8_t* set_pixels(matrix w, int scale, int comp, void (*f)(uint8_t *pixels, int *index, int p))	// stworzenie macierzy pixeli
 {
 	int width = w.x * scale;
 	int height = w.y * scale;
@@ -158,7 +169,7 @@ uint8_t* set_pixels(matrix w, int scale, int comp, void (*f)(uint8_t *pixels, in
 	return pixels;
 }
 
-void save(matrix w, arguments *args) {
+void save(matrix w, arguments *args) {		// zapis świata
 	uint8_t* pixels;
 	arguments cfg = *args;	
 	int scale = 10;

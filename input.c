@@ -6,18 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void display_help(){				// ta funkcja powinna być w kodzie z obsługą wyjścia, a nie wejścia
-	printf("Usage: ./glife [arguments]\n");
-	printf("Arguments:\n");
-	printf("-h 							=> help\n");
-	printf("-g (with one of:[glife, ant]				=> game\n");
-	printf("-f (with filename or stdin) 				=> input file\n");
-	printf("-o (with filename prefix) 				=> output file prefix\n");
-	printf("-t (with one of:[gif, jpg, png, bmp, txt, stdout]) 	=> output file type\n");
-	printf("-i (with integer number) 				=> number of iterations\n");
-}
-
-void process_input(int argc, char **argv, arguments *args){
+void process_input(int argc, char **argv, arguments *args){	// przetworzenie argumentów wejściowych
 	char c;
 	int x = 1;
 	
@@ -33,7 +22,7 @@ void process_input(int argc, char **argv, arguments *args){
 		
 		x++;
 
-		switch(c){
+		switch(c){					// czytanie argumentów
 			case 'h':
 				args->help_wanted = 1;
 				break;
@@ -68,7 +57,7 @@ int is_type(arguments cfg, const char* type)
 	return 0;
 }
 
-matrix read_matrix(char *filename){
+matrix read_matrix(char *filename){	// wczytanie świata z pliku wejściowego
 	FILE *in = strcmp(filename, "stdin") == 0 ? stdin : fopen(filename, "r");
 	int x;
 	fscanf(in,"%d",&x);
@@ -87,7 +76,7 @@ matrix read_matrix(char *filename){
 	return M;
 }	
 
-void init_cfg(arguments *args){
+void init_cfg(arguments *args){		// ustalenie wartości argumentów na domyślne
 	args->help_wanted = 0;
 	args->iterations = 100;
 	strcpy(args->in, "dane");

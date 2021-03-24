@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+void display_help();
+
 void save(matrix w, arguments *cfg);
 
 void error(int x);

@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-void create_matrix(int x,int y,matrix *w) {
+void create_matrix(int x,int y,matrix *w) { 		// zaalokowanie pamięci na świat
 	w->x = x;
 	w->y = y;
 	w->iteration = 0;
@@ -11,7 +11,7 @@ void create_matrix(int x,int y,matrix *w) {
 		w->v[i] = (int*)malloc(y * sizeof(int));
 }
 
-void free_matrix(matrix *w) {
+void free_matrix(matrix *w) {				// zwolnienie pamięci
 	for(int i=0;i<w->x;i++)
 		free(w->v[i]);
 	free(w->v);
