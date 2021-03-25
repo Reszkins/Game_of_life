@@ -10,7 +10,7 @@ void fix_matrix(matrix *w);
 
 void next_generation(matrix *w, arguments cfg);
 
-void find_ant(matrix* w);
+int find_ant(matrix* w);
 
 void ant_next_generation(matrix* w);
 

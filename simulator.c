@@ -1,5 +1,5 @@
 #include "simulator.h"
-//#include "matrix.h"
+#include "output.h"
 
 #include <stdio.h>
 
@@ -58,25 +58,24 @@ void next_generation(matrix *w, arguments cfg) {			// stworzenie nowej generacji
 
 //ant
 int ant = 0;
-int ant_x = -1;
-int ant_y = -1;
+int ant_x = 0;
+int ant_y = 0;
 char direction = 'n';
 
-void find_ant(matrix *w){			// znalezienie początkowej lokalizacji mrówki
+int find_ant(matrix *w){			// znalezienie początkowej lokalizacji mrówki
 	for(int i=0; i < w->x; i++){
 		for(int j=0; j < w->y; j++){
 			if(w->v[i][j] == 2){
 				ant_x = i;
 				ant_y = j;
-				break;
+				return 0;
 			}
 		}
 	}
+	error(3);
 }
 
 void ant_next_generation(matrix *w){		// stworzenie następnej generacji świata
-	if(ant_x == -1 && ant_y == -1)
-		find_ant(w);
 	//printf("x: %d y: %d d: %c\n",ant_x,ant_y,direction);
 	if(ant==0){
 		w->v[ant_x][ant_y] = 1;

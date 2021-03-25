@@ -25,6 +25,12 @@ int main(int argc,char **argv){
 	
 	matrix world = read_matrix(args.in);		// wczytanie świata początkowego z pliku
 
+	if(strcmp(args.game,"ant") == 0)		// znalezienie punktu startowego mrówki
+		find_ant(&world);
+
+	e=check_error();				// sprawdzenie błędu
+	if(e != 0) return e;
+
 	for(int i=0; i < args.iterations; i++){		// tworzenie kolejnych iteracji
 
 		save(world, &args);

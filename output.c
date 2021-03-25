@@ -34,6 +34,8 @@ void error(int y) {				// zgłoszenie błędu
 	x = y;
 	if (x == 1)
 		fprintf(stderr, "Błąd: Nieprawidłowe argumenty\n");
+	else if( x == 3) 
+		fprintf(stderr, "Niepoprawny plik wejściowy dla mrówki, brak punktu początkowego\n");
 
 }
 
